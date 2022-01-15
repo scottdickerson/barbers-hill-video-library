@@ -1,0 +1,36 @@
+.videoTile {
+  max-height: 630px;
+  max-width: 800px;
+  min-width: 800px;
+  background-color: #0a1e2d;
+}
+.videoTile video {
+  width: 80%;
+}
+
+.videoTile + .videoTile {
+  margin-top: 15px;
+}
+
+.videoContent {
+  padding: 2rem 4rem 0rem;
+  margin: auto;
+}
+
+.videoTextContent {
+  padding: 33px 0px 36px;
+}
+
+.videoTextContent h2 {
+  font-size: 26px;
+  color: white;
+  margin: 0;
+  line-height: 52px;
+}
+
+.description {
+  color: #ebdfca;
+  font-size: 19px;
+  margin: 0;
+  line-height: 44px;
+}

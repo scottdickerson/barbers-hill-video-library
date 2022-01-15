@@ -1,0 +1,24 @@
+.videoPage {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  overflow-y: hidden;
+  height: 100vh;
+}
+
+.videoList {
+  margin-top: 367px;
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 1080px;
+  background-color: #204966;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-left: 0.5rem;
+  box-sizing: border-box;
+}
+
+.header {
+  position: fixed;
+}

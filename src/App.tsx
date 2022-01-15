@@ -1,25 +1,25 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import PullScreen from "./components/PullScreen";
+import VideoList from "./components/VideoList";
+import VideoLoader from "./containers/VideoLoader";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<PullScreen />}></Route>
+        <Route
+          path="/videoList"
+          element={
+            <VideoLoader>
+              <VideoList />
+            </VideoLoader>
+          }
+        ></Route>
+      </Routes>
+    </BrowserRouter>
   );
 }
 
