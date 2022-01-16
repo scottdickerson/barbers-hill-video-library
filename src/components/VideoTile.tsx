@@ -5,14 +5,21 @@ export interface IVideo {
   description: string;
   videoFilename: string;
   keywords: string;
+
+  serverURL: string;
 }
 
-const VideoTile = ({ title, description, videoFilename }: IVideo) => {
+const VideoTile = ({
+  title,
+  description,
+  videoFilename,
+  serverURL,
+}: IVideo) => {
   return (
     <div className={styles.videoTile}>
       <div className={styles.videoContent}>
         <video controls>
-          <source src={`http://127.0.0.1:3000/api/${videoFilename}`}></source>
+          <source src={`${serverURL}/api/${videoFilename}`}></source>
         </video>
         <div className={styles.videoTextContent}>
           <h2>{title.toUpperCase()}</h2>

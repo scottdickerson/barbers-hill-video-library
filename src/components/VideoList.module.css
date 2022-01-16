@@ -23,6 +23,11 @@
   position: fixed;
 }
 
+.noVideos {
+  color: white;
+  padding: 1rem 0rem;
+}
+
 .description {
   color: #ebdfca;
   font-size: 23px;
