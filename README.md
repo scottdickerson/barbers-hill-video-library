@@ -1,5 +1,13 @@
 # Video List
 
+## Deploying to heroku
+
+```~~~bash
+heroku login
+heroku create barbers-hill-video-library
+npm run deploy
+```
+
 ## TODO
 
 Check on the video list page return timeout (currently at 15 minutes)
