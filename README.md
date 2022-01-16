@@ -10,8 +10,6 @@ npm run deploy
 
 ## TODO
 
-Check on the video list page return timeout (currently at 15 minutes)
-
 ## Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

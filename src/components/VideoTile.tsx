@@ -7,6 +7,8 @@ export interface IVideo {
   keywords: string;
 
   serverURL: string;
+  onVideoStopped: () => void;
+  onVideoStarted: () => void;
 }
 
 const VideoTile = ({
@@ -14,11 +16,18 @@ const VideoTile = ({
   description,
   videoFilename,
   serverURL,
+  onVideoStopped,
+  onVideoStarted,
 }: IVideo) => {
   return (
     <div className={styles.videoTile}>
       <div className={styles.videoContent}>
-        <video controls>
+        <video
+          controls
+          onPlay={onVideoStarted}
+          onEnded={onVideoStopped}
+          onPause={onVideoStopped}
+        >
           <source src={`${serverURL}/api/${videoFilename}`}></source>
         </video>
         <div className={styles.videoTextContent}>

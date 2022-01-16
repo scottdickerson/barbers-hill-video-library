@@ -5,24 +5,35 @@ import { useTimeout } from "../customHooks";
 import { useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 export interface IVideoListProps {
   videos?: IVideo[];
   introduction?: string;
   serverURL?: string;
 }
 
-// TODO: check with angela on maximum video length before pull screen, do I have to deduce this somehow?
-const PULLSCREEN_RETURN_TIMEOUT = 60 * 15 * 1000;
-// const PULLSCREEN_RETURN_TIMEOUT = 5 * 1000;
+// Two minutes after the last video stops playing
+const PULLSCREEN_RETURN_TIMEOUT = 60 * 2 * 1000;
+// const PULLSCREEN_RETURN_TIMEOUT = 10 * 1000;
 
 const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>("");
+  // will turn off timeout while video is playing and turn it back on afterwards
+  const [timeout, setTimeout] = useState<number | null>(
+    PULLSCREEN_RETURN_TIMEOUT
+  );
 
+  const clearTimeout = useCallback(() => {
+    setTimeout(null);
+  }, []);
+  const restartTimeout = useCallback(() => {
+    setTimeout(PULLSCREEN_RETURN_TIMEOUT);
+  }, []);
+  //
   useTimeout(() => {
     navigate("/");
-  }, PULLSCREEN_RETURN_TIMEOUT);
+  }, timeout);
   return (
     <div className={styles.videoPage}>
       <header className={styles.header}>
@@ -54,13 +65,18 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
                       // first allow all videos if no keyword is set
                       keyword === "" ||
                       // otherwise look for the specific keyword
-                      keywords.split(",").includes(keyword)
+                      keywords
+                        .split(",")
+                        .map((keywordString) => keywordString.trim())
+                        .includes(keyword)
                   )
                   .map((video) => (
                     <VideoTile
                       key={video.videoFilename}
                       {...video}
                       serverURL={serverURL}
+                      onVideoStarted={clearTimeout}
+                      onVideoStopped={restartTimeout}
                     />
                   ))
               : null}
