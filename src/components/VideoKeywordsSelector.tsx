@@ -20,7 +20,7 @@ const VideoKeywordsSelector = ({
         }
       >
         <option>{ALL_TOPICS}</option>
-        {keywords.map((keyword) => (
+        {keywords.sort().map((keyword) => (
           <option key={keyword}>{keyword}</option>
         ))}
       </select>
