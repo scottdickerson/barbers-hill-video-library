@@ -4,6 +4,7 @@ export interface IVideo {
   title: string;
   description: string;
   videoFilename: string;
+  keywords: string;
 }
 
 const VideoTile = ({ title, description, videoFilename }: IVideo) => {

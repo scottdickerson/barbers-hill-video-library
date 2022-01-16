@@ -22,3 +22,15 @@
 .header {
   position: fixed;
 }
+
+.description {
+  color: #ebdfca;
+  font-size: 23px;
+  margin: 0;
+  line-height: 44px;
+  max-width: 392px;
+  text-align: center;
+  position: absolute;
+  left: 583px;
+  top: 126px;
+}

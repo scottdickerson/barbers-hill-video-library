@@ -1,0 +1,14 @@
+.videoKeywordsSelector {
+  font-family: "Avenir";
+  font-size: 18px;
+  color: white;
+  padding: 1rem 0rem;
+}
+
+.videoKeywordsSelector select {
+  font-size: 18px;
+}
+
+.videoKeywordsSelector select:focus {
+  outline: unset;
+}
