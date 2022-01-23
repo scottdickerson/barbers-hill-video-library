@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { IVideo } from "../components/VideoTile";
+import { useLocation } from "react-router-dom";
 
 interface IVideoLoaderTypes {
   children: React.ReactNode;
@@ -7,6 +8,7 @@ interface IVideoLoaderTypes {
 }
 
 const VideoLoader = ({ children, serverURL }: IVideoLoaderTypes) => {
+  const location = useLocation();
   // TODO: I would love to play with react query here if time
   const [videos, setVideos] = useState<IVideo[]>([]);
 
@@ -24,7 +26,7 @@ const VideoLoader = ({ children, serverURL }: IVideoLoaderTypes) => {
       .then(({ introduction: fetchedIntroduction }) => {
         setIntroduction(fetchedIntroduction);
       });
-  }, [serverURL]);
+  }, [serverURL, location]);
   return (
     <>
       {React.Children.map(children, (child) =>
@@ -33,6 +35,7 @@ const VideoLoader = ({ children, serverURL }: IVideoLoaderTypes) => {
               videos,
               introduction,
               serverURL,
+              isHidden: !location.pathname.includes("/videoList"),
             })
           : null
       )}

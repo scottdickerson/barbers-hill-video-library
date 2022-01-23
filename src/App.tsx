@@ -16,19 +16,15 @@ function App() {
   }, []);
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<PullScreen />}></Route>
-        <Route
-          path="/videoList"
-          element={
-            serverURL ? ( // only render everything once we know which server URL to use
-              <VideoLoader serverURL={serverURL}>
-                <VideoList />
-              </VideoLoader>
-            ) : null
-          }
-        ></Route>
-      </Routes>
+      {serverURL ? ( // only render everything once we know which server URL to use
+        // We want to render BOTH on this route, but hide each depending on the URL so the videos preload and don't reload everytime we switch pages
+        <>
+          <PullScreen />
+          <VideoLoader serverURL={serverURL}>
+            <VideoList />
+          </VideoLoader>
+        </>
+      ) : null}
     </BrowserRouter>
   );
 }

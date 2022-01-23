@@ -6,17 +6,26 @@ import { useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
 import { useState, useCallback } from "react";
+import classnames from "classnames";
+
 export interface IVideoListProps {
   videos?: IVideo[];
   introduction?: string;
   serverURL?: string;
+
+  isHidden?: boolean;
 }
 
 // Two minutes after the last video stops playing
 const PULLSCREEN_RETURN_TIMEOUT = 60 * 2 * 1000;
 // const PULLSCREEN_RETURN_TIMEOUT = 10 * 1000;
 
-const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
+const VideoList = ({
+  videos,
+  introduction,
+  serverURL,
+  isHidden,
+}: IVideoListProps) => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>("");
   // will turn off timeout while video is playing and turn it back on afterwards
@@ -35,7 +44,12 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
     navigate("/");
   }, timeout);
   return (
-    <div className={styles.videoPage}>
+    <div
+      className={classnames({
+        [styles.videoPage]: true,
+        [styles.hidden]: isHidden,
+      })}
+    >
       <header className={styles.header}>
         <img src={topBanner} alt="Video List" />
         {introduction ? (
