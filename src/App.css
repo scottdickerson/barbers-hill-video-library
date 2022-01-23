@@ -10,3 +10,7 @@
 body {
   font-family: Avenir;
 }
+
+video::-webkit-media-controls-fullscreen-button {
+  display: none !important;
+}

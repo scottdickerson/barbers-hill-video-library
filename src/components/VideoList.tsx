@@ -1,5 +1,5 @@
 import styles from "./VideoList.module.css";
-import topBanner from "./images/2a-Play-TopBanner.png";
+import topBanner from "./images/10.5-2A-Play-TopBanner.png";
 import VideoTile, { IVideo } from "./VideoTile";
 import { useTimeout } from "../customHooks";
 import { useNavigate } from "react-router";
