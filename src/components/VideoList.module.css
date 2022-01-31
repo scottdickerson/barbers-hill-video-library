@@ -24,10 +24,6 @@
   box-sizing: border-box;
 }
 
-.hidden {
-  display: none;
-}
-
 .header {
   position: fixed;
 }

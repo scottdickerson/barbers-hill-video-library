@@ -12,20 +12,13 @@ export interface IVideoListProps {
   videos?: IVideo[];
   introduction?: string;
   serverURL?: string;
-
-  isHidden?: boolean;
 }
 
 // Two minutes after the last video stops playing
 const PULLSCREEN_RETURN_TIMEOUT = 60 * 2 * 1000;
 // const PULLSCREEN_RETURN_TIMEOUT = 10 * 1000;
 
-const VideoList = ({
-  videos,
-  introduction,
-  serverURL,
-  isHidden,
-}: IVideoListProps) => {
+const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>("");
   // will turn off timeout while video is playing and turn it back on afterwards
@@ -44,12 +37,7 @@ const VideoList = ({
     navigate("/");
   }, timeout);
   return (
-    <div
-      className={classnames({
-        [styles.videoPage]: true,
-        [styles.hidden]: isHidden,
-      })}
-    >
+    <div className={classnames({ [styles.videoPage]: true })}>
       <header className={styles.header}>
         <img src={topBanner} alt="Video List" />
         {introduction ? (
