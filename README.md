@@ -4,9 +4,12 @@
 
 ```~~~bash
 heroku login
-heroku create barbers-hill-video-library
+heroku git:remote -a barbers-hill-honor-library
 npm run deploy
 ```
+
+Open a browser to this URL for testing
+https://barbers-hill-video-library.herokuapp.com/
 
 ## TODO
 
