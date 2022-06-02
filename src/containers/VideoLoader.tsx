@@ -9,12 +9,12 @@ interface IVideoLoaderTypes {
 
 const VideoLoader = ({ serverURL }: IVideoLoaderTypes) => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  const { pathname } = useLocation();
 
   useEffect(() => {
     dispatch(fetchVideos(serverURL));
     dispatch(fetchOverview(serverURL));
-  }, [serverURL, location, dispatch]);
+  }, [serverURL, pathname, dispatch]);
   return null;
 };
 

@@ -5,7 +5,7 @@ import { useTimeout } from "../customHooks";
 import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import classnames from "classnames";
 
 export interface IVideoListProps {
@@ -39,6 +39,13 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
 
   const { pathname } = useLocation();
 
+  // We have to leave video list around for caching so clear the keyword state if we leave
+  useEffect(() => {
+    if (pathname === "/") {
+      setKeyword("");
+    }
+  }, [pathname]);
+
   return (
     <div
       className={classnames(styles.videoPage, {
@@ -58,6 +65,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
         ) : (
           <>
             <VideoKeywordsSelector
+              key={pathname} // throw away if the path changes
               keywords={
                 Array.isArray(videos)
                   ? uniq(
@@ -73,12 +81,13 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
                     key={video.videoFilename}
                     {...video}
                     isHidden={
-                      keyword !== "" &&
-                      // otherwise look for the specific keyword
-                      !video.keywords
-                        .split(",")
-                        .map((keywordString) => keywordString.trim())
-                        .includes(keyword)
+                      pathname === "/" || // this will stop the video from continuing to play when we leave
+                      (keyword !== "" &&
+                        // otherwise look for the specific keyword
+                        !video.keywords
+                          .split(",")
+                          .map((keywordString) => keywordString.trim())
+                          .includes(keyword))
                     }
                     serverURL={serverURL}
                     onVideoStarted={clearTimeout}
