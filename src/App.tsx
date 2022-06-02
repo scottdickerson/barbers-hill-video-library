@@ -17,13 +17,15 @@ function App() {
           <Routes>
             <Route
               element={
-                <VideoListContainer serverURL={serverURL}>
-                  <VideoList />
-                </VideoListContainer>
+                <>
+                  <PullScreen />
+                  <VideoListContainer serverURL={serverURL}>
+                    <VideoList />
+                  </VideoListContainer>
+                </>
               }
-              path="/videoList"
+              path="/*"
             />
-            <Route element={<PullScreen />} path="/" />
           </Routes>
         </>
       ) : null}

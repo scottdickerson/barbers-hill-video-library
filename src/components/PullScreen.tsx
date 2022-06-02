@@ -3,7 +3,7 @@ import centerVideo from "./images/10.5-1B-Pull-CenterVideo-FPO.png";
 import bottomBanner from "./images/10.5-1C-Pull-BottomBanner.png";
 import styles from "./PullScreen.module.css";
 import { useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import classnames from "classnames";
 
 const PullScreen = () => {
@@ -20,10 +20,12 @@ const PullScreen = () => {
     document.addEventListener("click", handleClick);
   }, [handleClick]);
 
+  const { pathname } = useLocation();
+
   return (
     <div
-      className={classnames({
-        [styles.pullScreen]: true,
+      className={classnames(styles.pullScreen, {
+        [styles.hidden]: pathname !== "/",
       })}
     >
       <img src={topBanner} alt="Decorative Banner" />

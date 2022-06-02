@@ -3,6 +3,9 @@
   flex-flow: column;
   align-items: center;
 }
+.hidden {
+  display: none;
+}
 
 .pullScreen img {
   max-width: 1080px;

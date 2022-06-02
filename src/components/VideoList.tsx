@@ -2,7 +2,7 @@ import styles from "./VideoList.module.css";
 import topBanner from "./images/10.5-2A-Play-TopBanner.png";
 import VideoTile, { IVideo } from "./VideoTile";
 import { useTimeout } from "../customHooks";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
 import { useState, useCallback } from "react";
@@ -36,8 +36,15 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   useTimeout(() => {
     navigate("/");
   }, timeout);
+
+  const { pathname } = useLocation();
+
   return (
-    <div className={classnames({ [styles.videoPage]: true })}>
+    <div
+      className={classnames(styles.videoPage, {
+        [styles.hidden]: pathname === "/",
+      })}
+    >
       <header className={styles.header}>
         <img src={topBanner} alt="Video List" />
         {introduction ? (
@@ -61,26 +68,23 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
               onChange={(selectedKeyword) => setKeyword(selectedKeyword)}
             />
             {Array.isArray(videos) && serverURL
-              ? videos
-                  .filter(
-                    ({ keywords }) =>
-                      // first allow all videos if no keyword is set
-                      keyword === "" ||
+              ? videos.map((video) => (
+                  <VideoTile
+                    key={video.videoFilename}
+                    {...video}
+                    isHidden={
+                      keyword !== "" &&
                       // otherwise look for the specific keyword
-                      keywords
+                      !video.keywords
                         .split(",")
                         .map((keywordString) => keywordString.trim())
                         .includes(keyword)
-                  )
-                  .map((video) => (
-                    <VideoTile
-                      key={video.videoFilename}
-                      {...video}
-                      serverURL={serverURL}
-                      onVideoStarted={clearTimeout}
-                      onVideoStopped={restartTimeout}
-                    />
-                  ))
+                    }
+                    serverURL={serverURL}
+                    onVideoStarted={clearTimeout}
+                    onVideoStopped={restartTimeout}
+                  />
+                ))
               : null}
           </>
         )}
