@@ -26,6 +26,22 @@ In the project directory, you can run:
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+### Server
+
+Use this variable before starting the server to set the hostname of the API server (will default to 127.0.0.1 unless set)
+`REACT_APP_SERVER_URL=<> npm start`
+
+by default on the heroku instance it's set to our heroku deployed server
+set REACT_APP_SERVER_URL=https://barbers-hill-video-server.herokuapp.com/api
+
+## Deploy to Heroku for testing
+
+```~~~bash
+heroku login
+heroku git:remote -a barbers-hill-video-library
+npm run deploy
+heroku config:set REACT_APP_SERVER_URL=https://barbers-hill-video-server.herokuapp.com/api
+
 The page will reload if you make edits.\
 You will also see any lint errors in the console.
 
@@ -59,3 +75,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+```

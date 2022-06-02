@@ -4,17 +4,10 @@ import VideoList from "./components/VideoList";
 import VideoLoader from "./containers/VideoLoader";
 import VideoListContainer from "./containers/VideoListContainer";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { determineAPIServerLocation } from "./utils";
 
 function App() {
-  const [serverURL, setServerURL] = useState<string>();
-
-  useEffect(() => {
-    determineAPIServerLocation().then((actualServerURL) =>
-      setServerURL(actualServerURL)
-    );
-  }, []);
+  const serverURL =
+    process.env.REACT_APP_SERVER_URL || "http://127.0.0.1:3000/api";
   return (
     <BrowserRouter>
       {serverURL ? ( // only render everything once we know which server URL to use

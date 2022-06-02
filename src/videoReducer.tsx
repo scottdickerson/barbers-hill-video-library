@@ -9,16 +9,14 @@ export interface IVideosState {
 export const fetchVideos = createAsyncThunk(
   "videos/fetchVideos",
   async (serverURL: string) => {
-    return fetch(`${serverURL}/api`).then((response) => response.json());
+    return fetch(`${serverURL}`).then((response) => response.json());
   }
 );
 
 export const fetchOverview = createAsyncThunk(
   "videos/fetchOverview",
   async (serverURL: string) => {
-    return fetch(`${serverURL}/api/overview`).then((response) =>
-      response.json()
-    );
+    return fetch(`${serverURL}/overview`).then((response) => response.json());
   }
 );
 
