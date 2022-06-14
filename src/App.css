@@ -6,6 +6,10 @@
   font-family: Avenir;
   src: url(./components/fonts/Avenir-Medium-09.ttf);
 }
+@font-face {
+  font-family: AvenirBlack;
+  src: url(./components/fonts/Avenir-Black-03.ttf);
+}
 
 body {
   font-family: Avenir;

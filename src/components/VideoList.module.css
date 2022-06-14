@@ -34,9 +34,18 @@
 }
 
 .noVideos {
-  color: white;
+  color: #ebdfca;
   padding: 2rem 0rem;
   font-size: 23px;
+}
+
+.mediaLibrary {
+  font-family: "AvenirBlack";
+  text-transform: uppercase;
+  color: #91c4ea;
+  line-height: 45px;
+  font-size: 37px;
+  padding: 2rem 0rem;
 }
 
 .description {

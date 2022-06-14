@@ -1,8 +1,13 @@
 .videoKeywordsSelector {
   font-family: "Avenir";
   font-size: 18px;
-  color: white;
-  padding: 1rem 0rem;
+  color: #ebdfca;
+  display: flex;
+  flex-flow: column;
+  padding-bottom: 3rem;
+}
+.videoKeywordsSelector label {
+  padding-bottom: 0.5rem;
 }
 
 .videoKeywordsSelector select {

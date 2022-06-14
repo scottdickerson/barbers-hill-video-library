@@ -60,6 +60,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
       </header>
 
       <div className={styles.videoList}>
+        <p className={styles.mediaLibrary}>Media Library</p>
         {isEmpty(videos) ? (
           <h2 className={styles.noVideos}>No videos can be found</h2>
         ) : (
