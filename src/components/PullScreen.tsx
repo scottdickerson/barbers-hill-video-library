@@ -1,6 +1,4 @@
-import topBanner from "./images/10.5-1A-Pull-TopBanner.png";
-import centerVideo from "./images/10.5-1B-Pull-CenterVideo-FPO.png";
-import bottomBanner from "./images/10.5-1C-Pull-BottomBanner.png";
+import centerVideo from "./video/voicesMtBelvieu_pullScreen_MP4.mp4";
 import styles from "./PullScreen.module.css";
 import { useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -28,9 +26,7 @@ const PullScreen = () => {
         [styles.hidden]: pathname !== "/",
       })}
     >
-      <img src={topBanner} alt="Decorative Banner" />
-      <img src={centerVideo} alt="Voices of Mont Belview" />
-      <img src={bottomBanner} alt="Decorative Banner" />
+      <video src={centerVideo} autoPlay muted loop />
     </div>
   );
 };
