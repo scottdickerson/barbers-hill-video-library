@@ -32,6 +32,23 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const restartTimeout = useCallback(() => {
     setTimeout(PULLSCREEN_RETURN_TIMEOUT);
   }, []);
+
+  const handleVideoStarted = useCallback(
+    (event) => {
+      clearTimeout();
+      // stop all the other videos
+      const videoStarting = event?.currentTarget?.src;
+      console.log("stopping all videos but", videoStarting);
+      Array.from(document.getElementsByTagName("video")).forEach((video) => {
+        if (video.src !== videoStarting && !(video.ended || video.paused)) {
+          console.log("pausing video", video.src);
+          video.pause();
+        }
+      });
+    },
+    [clearTimeout]
+  );
+
   //
   useTimeout(() => {
     navigate("/");
@@ -91,7 +108,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
                           .includes(keyword))
                     }
                     serverURL={serverURL}
-                    onVideoStarted={clearTimeout}
+                    onVideoStarted={handleVideoStarted}
                     onVideoStopped={restartTimeout}
                   />
                 ))

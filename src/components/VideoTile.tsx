@@ -1,6 +1,6 @@
 import styles from "./VideoTile.module.css";
 import classNames from "classnames";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, ReactEventHandler } from "react";
 
 export interface IVideo {
   title: string;
@@ -9,8 +9,8 @@ export interface IVideo {
   keywords: string;
 
   serverURL: string;
-  onVideoStopped: () => void;
-  onVideoStarted: () => void;
+  onVideoStopped: ReactEventHandler<HTMLVideoElement>;
+  onVideoStarted: ReactEventHandler<HTMLVideoElement>;
   isHidden: boolean;
 }
 
@@ -41,9 +41,8 @@ const VideoTile = ({
           onPlay={onVideoStarted}
           onEnded={onVideoStopped}
           onPause={onVideoStopped}
-        >
-          <source src={`${serverURL}/${videoFilename}`}></source>
-        </video>
+          src={`${serverURL}/${videoFilename}`}
+        ></video>
         <div className={styles.videoTextContent}>
           <h2>{title.toUpperCase()}</h2>
           <p className={styles.description}>{description}</p>
