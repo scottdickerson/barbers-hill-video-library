@@ -5,9 +5,15 @@ import { useTimeout } from "../customHooks";
 import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
-import { useState, useCallback, useEffect, UIEventHandler } from "react";
+import {
+  useState,
+  useCallback,
+  useEffect,
+  UIEventHandler,
+  useRef,
+} from "react";
 import classnames from "classnames";
-import { useTouchOnlyAfterScrollingFinishes } from "@scottdickerson/barbers-hill-shared-components";
+import { useOnScrollListener } from "@scottdickerson/barbers-hill-shared-components";
 
 export interface IVideoListProps {
   videos?: IVideo[];
@@ -26,26 +32,32 @@ const pauseVideos = (videos: HTMLVideoElement[]) => {
 
 // Two minutes after the last video stops playing
 const PULLSCREEN_RETURN_TIMEOUT = 60 * 2 * 1000;
-// const PULLSCREEN_RETURN_TIMEOUT = 10 * 1000;
+// const PULLSCREEN_RETURN_TIMEOUT = 5 * 1000;
 const SCROLL_CHECK_TIMEOUT = 100;
 
 const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState<string>("");
+  const videoScrollRef = useRef<HTMLDivElement>(null);
   // will turn off timeout while video is playing and turn it back on afterwards
   const [timeout, setTimeout] = useState<number | null>(
     PULLSCREEN_RETURN_TIMEOUT
   );
-  const { isScrolling, handleScroll } = useTouchOnlyAfterScrollingFinishes({
-    scrollCheckTimeout: SCROLL_CHECK_TIMEOUT,
-  });
 
   const clearTimeout = useCallback(() => {
+    console.log("suspend timer");
     setTimeout(null);
   }, []);
   const restartTimeout = useCallback(() => {
+    console.log("restart timer to ", PULLSCREEN_RETURN_TIMEOUT);
     setTimeout(PULLSCREEN_RETURN_TIMEOUT);
   }, []);
+
+  const { isScrolling, handleScroll } = useOnScrollListener({
+    scrollCheckTimeout: SCROLL_CHECK_TIMEOUT,
+    onScrollFinished: restartTimeout,
+    onScrollStarted: clearTimeout,
+  });
 
   const handleVideoStarted = useCallback(
     (event) => {
@@ -62,6 +74,10 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
     [clearTimeout]
   );
 
+  const handleVideoStopped = () => {
+    restartTimeout();
+  };
+
   const handleVideoClick = (video: HTMLVideoElement | null) => {
     if (video) {
       console.log("handle video click", video.paused);
@@ -77,20 +93,30 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   useEffect(() => {
     if (isScrolling) {
       pauseVideos(Array.from(document.getElementsByTagName("video")));
+    } else {
     }
   }, [isScrolling]);
 
   //
   useTimeout(() => {
+    console.log("timer reached returning to previous page");
+    clearTimeout();
+    if (videoScrollRef.current) {
+      console.log("current scrollTop", videoScrollRef.current.scrollTop);
+      videoScrollRef.current.scrollTop = 0;
+    }
     navigate("/");
   }, timeout);
 
   const { pathname } = useLocation();
 
-  // We have to leave video list around for caching so clear the keyword state if we leave
+  // HACK! We have to secretly hide the video list around for file caching so clear the keyword state if we leave
   useEffect(() => {
     if (pathname === "/") {
       setKeyword("");
+    } else {
+      // start the timeout when we render again
+      restartTimeout();
     }
   }, [pathname]);
 
@@ -110,6 +136,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
       <div
         className={styles.videoList}
         onScroll={handleScroll as unknown as UIEventHandler<HTMLDivElement>}
+        ref={videoScrollRef}
       >
         <p className={styles.mediaLibrary}>Media Library</p>
         {isEmpty(videos) ? (
@@ -144,7 +171,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
                     }
                     serverURL={serverURL}
                     onVideoStarted={handleVideoStarted}
-                    onVideoStopped={restartTimeout}
+                    onVideoStopped={handleVideoStopped}
                   />
                 ))
               : null}
