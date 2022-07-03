@@ -19,6 +19,20 @@
 .videoContent {
   padding: 2rem 4rem 0rem;
   margin: auto;
+  position: relative;
+}
+.videoContentControls {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: black;
+  background-size: 200px;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.5;
+  background-image: url("./images/play-button.png");
 }
 
 .videoTextContent {

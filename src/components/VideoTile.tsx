@@ -1,6 +1,6 @@
 import styles from "./VideoTile.module.css";
 import classNames from "classnames";
-import { useRef, useEffect, ReactEventHandler } from "react";
+import { useRef, useEffect, ReactEventHandler, useState } from "react";
 
 export interface IVideo {
   title: string;
@@ -26,6 +26,7 @@ const VideoTile = ({
   isHidden,
 }: IVideo) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   useEffect(() => {
     if (videoRef.current && isHidden) {
       videoRef.current.pause();
@@ -37,25 +38,50 @@ const VideoTile = ({
       | React.MouseEvent<HTMLVideoElement>
       | React.TouchEvent<HTMLVideoElement>
   ) => {
-    event.preventDefault();
     if (onClick) {
       onClick(videoRef.current);
     }
   };
+
+  const handleVideoStarted: ReactEventHandler<HTMLVideoElement> = (event) => {
+    setIsPlaying(true);
+    onVideoStarted(event);
+  };
+
+  const handleVideoStopped: ReactEventHandler<HTMLVideoElement> = (event) => {
+    setIsPlaying(false);
+    onVideoStopped(event);
+  };
+
+  const { width: videoWidth, height: videoHeight } =
+    videoRef.current?.getBoundingClientRect() || {};
 
   return (
     <div
       className={classNames(styles.videoTile, { [styles.hidden]: isHidden })}
     >
       <div className={styles.videoContent}>
+        {!isPlaying && (
+          <div
+            className={styles.videoContentControls}
+            style={{
+              height: videoHeight,
+              width: videoWidth,
+              top: "2rem",
+              left: "4rem",
+            }}
+          />
+        )}
         <video
-          controls
           ref={videoRef}
-          onPlay={onVideoStarted}
-          onEnded={onVideoStopped}
-          onPause={onVideoStopped}
+          onPlay={handleVideoStarted}
+          onEnded={handleVideoStopped}
+          onPause={handleVideoStopped}
           onClick={handleClick}
           onTouchStart={handleClick}
+          onTouchEnd={(event) => {
+            event?.preventDefault();
+          }}
           src={`${serverURL}/${videoFilename}`}
         ></video>
         <div className={styles.videoTextContent}>
