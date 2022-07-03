@@ -1,5 +1,10 @@
 # Video List
 
+## Install
+
+Get a github PAT with ability to read repos. Set the NPM_TOKEN environment variable to it
+and run `npm install`
+
 ## Deploying to heroku
 
 ```~~~bash

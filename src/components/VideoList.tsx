@@ -5,8 +5,9 @@ import { useTimeout } from "../customHooks";
 import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
 import { flatten, uniq, isEmpty } from "lodash";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, UIEventHandler } from "react";
 import classnames from "classnames";
+import { useTouchOnlyAfterScrollingFinishes } from "@scottdickerson/barbers-hill-shared-components";
 
 export interface IVideoListProps {
   videos?: IVideo[];
@@ -14,9 +15,19 @@ export interface IVideoListProps {
   serverURL?: string;
 }
 
+const pauseVideos = (videos: HTMLVideoElement[]) => {
+  videos.forEach((video) => {
+    if (!(video.ended || video.paused)) {
+      console.log("pausing video", video.src);
+      video.pause();
+    }
+  });
+};
+
 // Two minutes after the last video stops playing
 const PULLSCREEN_RETURN_TIMEOUT = 60 * 2 * 1000;
 // const PULLSCREEN_RETURN_TIMEOUT = 10 * 1000;
+const SCROLL_CHECK_TIMEOUT = 100;
 
 const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const navigate = useNavigate();
@@ -25,6 +36,9 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
   const [timeout, setTimeout] = useState<number | null>(
     PULLSCREEN_RETURN_TIMEOUT
   );
+  const { isScrolling, handleScroll } = useTouchOnlyAfterScrollingFinishes({
+    scrollCheckTimeout: SCROLL_CHECK_TIMEOUT,
+  });
 
   const clearTimeout = useCallback(() => {
     setTimeout(null);
@@ -39,15 +53,32 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
       // stop all the other videos
       const videoStarting = event?.currentTarget?.src;
       console.log("stopping all videos but", videoStarting);
-      Array.from(document.getElementsByTagName("video")).forEach((video) => {
-        if (video.src !== videoStarting && !(video.ended || video.paused)) {
-          console.log("pausing video", video.src);
-          video.pause();
-        }
-      });
+      pauseVideos(
+        Array.from(document.getElementsByTagName("video")).filter(
+          (video: HTMLVideoElement) => video.src !== videoStarting
+        )
+      );
     },
     [clearTimeout]
   );
+
+  const handleVideoClick = (video: HTMLVideoElement | null) => {
+    if (video) {
+      console.log("handle video click", video.paused);
+      if (video.paused && !isScrolling) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    }
+  };
+
+  // once I start scrolling pause any running videos
+  useEffect(() => {
+    if (isScrolling) {
+      pauseVideos(Array.from(document.getElementsByTagName("video")));
+    }
+  }, [isScrolling]);
 
   //
   useTimeout(() => {
@@ -76,7 +107,10 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
         ) : null}
       </header>
 
-      <div className={styles.videoList}>
+      <div
+        className={styles.videoList}
+        onScroll={handleScroll as unknown as UIEventHandler<HTMLDivElement>}
+      >
         <p className={styles.mediaLibrary}>Media Library</p>
         {isEmpty(videos) ? (
           <h2 className={styles.noVideos}>No videos can be found</h2>
@@ -98,6 +132,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
                   <VideoTile
                     key={video.videoFilename}
                     {...video}
+                    onClick={!isScrolling ? handleVideoClick : undefined}
                     isHidden={
                       pathname === "/" || // this will stop the video from continuing to play when we leave
                       (keyword !== "" &&

@@ -11,6 +11,7 @@ export interface IVideo {
   serverURL: string;
   onVideoStopped: ReactEventHandler<HTMLVideoElement>;
   onVideoStarted: ReactEventHandler<HTMLVideoElement>;
+  onClick?: (video: HTMLVideoElement | null) => void;
   isHidden: boolean;
 }
 
@@ -20,6 +21,7 @@ const VideoTile = ({
   videoFilename,
   serverURL,
   onVideoStopped,
+  onClick,
   onVideoStarted,
   isHidden,
 }: IVideo) => {
@@ -29,6 +31,17 @@ const VideoTile = ({
       videoRef.current.pause();
     }
   }, [isHidden]);
+
+  const handleClick = (
+    event:
+      | React.MouseEvent<HTMLVideoElement>
+      | React.TouchEvent<HTMLVideoElement>
+  ) => {
+    event.preventDefault();
+    if (onClick) {
+      onClick(videoRef.current);
+    }
+  };
 
   return (
     <div
@@ -41,6 +54,8 @@ const VideoTile = ({
           onPlay={onVideoStarted}
           onEnded={onVideoStopped}
           onPause={onVideoStopped}
+          onClick={handleClick}
+          onTouchStart={handleClick}
           src={`${serverURL}/${videoFilename}`}
         ></video>
         <div className={styles.videoTextContent}>
