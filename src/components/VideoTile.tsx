@@ -1,6 +1,7 @@
 import styles from "./VideoTile.module.css";
 import classNames from "classnames";
 import { useRef, useEffect, ReactEventHandler, useState } from "react";
+import { useIntersection } from "../customHooks";
 
 export interface IVideo {
   title: string;
@@ -26,7 +27,11 @@ const VideoTile = ({
   isHidden,
 }: IVideo) => {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const videoContainerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+
+  const isVisible = useIntersection(videoContainerRef, "200px");
+  console.log("isVideoTileVisible", videoFilename, isVisible);
   useEffect(() => {
     if (videoRef.current && isHidden) {
       videoRef.current.pause();
@@ -34,7 +39,7 @@ const VideoTile = ({
   }, [isHidden]);
 
   const handleClick = (
-    event:
+    _event:
       | React.MouseEvent<HTMLVideoElement>
       | React.TouchEvent<HTMLVideoElement>
   ) => {
@@ -56,34 +61,38 @@ const VideoTile = ({
   const { width: videoWidth, height: videoHeight } =
     videoRef.current?.getBoundingClientRect() || {};
 
+  console.log("videoWidth and Height", videoFilename, videoWidth, videoHeight);
+
   return (
     <div
       className={classNames(styles.videoTile, { [styles.hidden]: isHidden })}
     >
-      <div className={styles.videoContent}>
-        {!isPlaying && (
-          <div
-            className={styles.videoContentControls}
-            style={{
-              height: videoHeight,
-              width: videoWidth,
-              top: "2rem",
-              left: "4rem",
-            }}
-          />
-        )}
-        <video
-          ref={videoRef}
-          onPlay={handleVideoStarted}
-          onEnded={handleVideoStopped}
-          onPause={handleVideoStopped}
-          onClick={handleClick}
-          onTouchStart={handleClick}
-          onTouchEnd={(event) => {
-            event?.preventDefault();
-          }}
-          src={`${serverURL}/${videoFilename}`}
-        ></video>
+      <div className={styles.videoContent} ref={videoContainerRef}>
+        {isVisible ? (
+          <div className={styles.videoWrapper}>
+            {!isPlaying && (
+              <div
+                className={styles.videoContentControls}
+                style={{
+                  height: videoHeight,
+                  width: videoWidth,
+                }}
+              />
+            )}
+            <video
+              ref={videoRef}
+              onPlay={handleVideoStarted}
+              onEnded={handleVideoStopped}
+              onPause={handleVideoStopped}
+              onClick={handleClick}
+              onTouchStart={handleClick}
+              onTouchEnd={(event) => {
+                event?.preventDefault();
+              }}
+              src={`${serverURL}/${videoFilename}`}
+            ></video>
+          </div>
+        ) : null}
         <div className={styles.videoTextContent}>
           <h2>{title.toUpperCase()}</h2>
           <p className={styles.description}>{description}</p>

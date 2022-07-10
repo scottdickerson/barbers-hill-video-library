@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export function useTimeout(callback: () => void, delay: number | null) {
   const savedCallback = useRef(callback);
@@ -21,3 +21,30 @@ export function useTimeout(callback: () => void, delay: number | null) {
     return () => clearTimeout(id);
   }, [delay]);
 }
+
+export const useIntersection = (
+  element: React.RefObject<HTMLElement>,
+  rootMargin: string
+) => {
+  const [isVisible, setState] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setState(entry.isIntersecting);
+      },
+      { rootMargin }
+    );
+
+    element.current && observer.observe(element.current);
+    const storedRef = element.current;
+
+    return () => {
+      if (storedRef) {
+        observer.unobserve(storedRef);
+      }
+    };
+  }, [element, rootMargin]);
+
+  return isVisible;
+};
