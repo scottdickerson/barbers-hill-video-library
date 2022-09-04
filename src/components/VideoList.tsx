@@ -4,7 +4,6 @@ import VideoTile, { IVideo } from "./VideoTile";
 import { useTimeout } from "../customHooks";
 import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
-import pullScreenVideo from "./video/voicesMtBelvieu_pullScreen_MP4.mp4";
 import { flatten, uniq, isEmpty } from "lodash";
 import {
   useState,
@@ -24,7 +23,7 @@ export interface IVideoListProps {
 
 const pauseVideos = (videos: HTMLVideoElement[]) => {
   videos.forEach((video) => {
-    if (!(video.ended || video.paused) && video.src !== pullScreenVideo) {
+    if (!(video.ended || video.paused) && video.id !== "pullscreenvideo") {
       console.log("pausing video", video.src);
       video.pause();
     }

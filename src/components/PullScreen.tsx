@@ -26,7 +26,7 @@ const PullScreen = () => {
         [styles.hidden]: pathname !== "/",
       })}
     >
-      <video src={centerVideo} autoPlay muted loop />
+      <video id="pullscreenvideo" src={centerVideo} autoPlay muted loop />
     </div>
   );
 };
