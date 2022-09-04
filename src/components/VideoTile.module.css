@@ -2,6 +2,8 @@
   max-width: 800px;
   min-width: 800px;
   background-color: #0a1e2d;
+  flex-basis: 670px;
+  flex-shrink: 0;
 }
 .videoTile video {
   width: 100%;

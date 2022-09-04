@@ -4,6 +4,7 @@ import VideoTile, { IVideo } from "./VideoTile";
 import { useTimeout } from "../customHooks";
 import { useLocation, useNavigate } from "react-router";
 import VideoKeywordsSelector from "./VideoKeywordsSelector";
+import pullScreenVideo from "./video/voicesMtBelvieu_pullScreen_MP4.mp4";
 import { flatten, uniq, isEmpty } from "lodash";
 import {
   useState,
@@ -67,7 +68,8 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
       console.log("stopping all videos but", videoStarting);
       pauseVideos(
         Array.from(document.getElementsByTagName("video")).filter(
-          (video: HTMLVideoElement) => video.src !== videoStarting
+          (video: HTMLVideoElement) =>
+            video.src !== videoStarting && video.src !== pullScreenVideo
         )
       );
     },
