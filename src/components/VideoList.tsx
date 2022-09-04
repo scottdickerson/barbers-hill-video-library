@@ -24,7 +24,7 @@ export interface IVideoListProps {
 
 const pauseVideos = (videos: HTMLVideoElement[]) => {
   videos.forEach((video) => {
-    if (!(video.ended || video.paused)) {
+    if (!(video.ended || video.paused) && video.src !== pullScreenVideo) {
       console.log("pausing video", video.src);
       video.pause();
     }
@@ -68,8 +68,7 @@ const VideoList = ({ videos, introduction, serverURL }: IVideoListProps) => {
       console.log("stopping all videos but", videoStarting);
       pauseVideos(
         Array.from(document.getElementsByTagName("video")).filter(
-          (video: HTMLVideoElement) =>
-            video.src !== videoStarting && video.src !== pullScreenVideo
+          (video: HTMLVideoElement) => video.src !== videoStarting
         )
       );
     },
