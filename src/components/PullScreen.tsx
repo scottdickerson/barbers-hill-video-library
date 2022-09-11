@@ -1,4 +1,4 @@
-import centerVideo from "./video/voicesMtBelvieu_pullScreen_MP4.mp4";
+import centerVideo from "./video/voicesMtBelvieu_pullScreen.mp4";
 import styles from "./PullScreen.module.css";
 import { useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
